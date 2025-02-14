@@ -89,6 +89,18 @@ def fetchJson(url,headers=None):
 def parseMain():
 	j = requests.get(f'{base}tenant-groups/21960588-0518-4dd3-89e5-f25ba5bf5631/navigation').json()
 
+def parseGenres():
+	tenant = lm4utils.getSetting("tenant")
+	if tenant == '':
+		lm4utils.displayMsg(lm4utils.getTranslation(30512), lm4utils.getTranslation(30513))
+		return [], []
+
+	# get list of genres
+	genres = fetchJson(f'https://api.tenant.frontend.vod.filmwerte.de/v11/{tenant}/genres')
+	genre_names = [d["name"] for d in genres]
+	genre_ids = [d["id"] for d in genres]
+	return genre_names, genre_ids
+
 def parseWatchList(params,content='videos'):
 	_checkTokenExpired()
 	token = lm4utils.getTokenWithErrorNotification()
